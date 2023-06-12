@@ -40,8 +40,8 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
 
-                groupId = 'com.github.1luvin.android'
-                artifactId = 'utils'
+                groupId = 'com.github.1luvin'
+                artifactId = 'android-utils'
                 version = '1.0'
             }
         }
