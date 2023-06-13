@@ -17,7 +17,7 @@ object Layout {
     }
 
     private fun size(size: Int): Int {
-        if (density == 0f) throw RuntimeException("You must call Layout.initialize(Context) before using Dp methods.")
+        if (density == 0f) throw RuntimeException("You must call Layout.initialize(Context) before using.")
         return if (size > 0) (size * density).toInt() else size
     }
 
@@ -165,7 +165,7 @@ object Layout {
 
     fun relative(width: Int, height: Int, leftMargin: Int, topMargin: Int, rightMargin: Int, bottomMargin: Int): RelativeLayout.LayoutParams {
         return relative(width, height).apply {
-            setMargins(leftMargin, topMargin, rightMargin, bottomMargin)
+            setMargins(size(leftMargin), size(topMargin), size(rightMargin), size(bottomMargin))
         }
     }
 
