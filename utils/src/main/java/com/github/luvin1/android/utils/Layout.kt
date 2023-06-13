@@ -1,8 +1,10 @@
 package com.github.luvin1.android.utils
 
 import android.content.Context
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 
 object Layout {
 
@@ -17,6 +19,37 @@ object Layout {
     private fun size(size: Int): Int {
         if (density == 0f) throw RuntimeException("You must call Layout.initialize(Context) before using Dp methods.")
         return if (size > 0) (size * density).toInt() else size
+    }
+
+    /*
+        ViewGroup
+     */
+
+    fun anyDp(
+        width: Int, height: Int,
+        leftMargin: Int, topMargin: Int, rightMargin: Int, bottomMargin: Int
+    ): ViewGroup.MarginLayoutParams {
+        return any(
+            size(width), size(height),
+            size(leftMargin), size(topMargin), size(rightMargin), size(bottomMargin)
+        )
+    }
+
+    fun anyDp(width: Int, height: Int): ViewGroup.LayoutParams {
+        return any(size(width), size(height))
+    }
+
+    fun any(
+        width: Int, height: Int,
+        leftMargin: Int, topMargin: Int, rightMargin: Int, bottomMargin: Int
+    ): ViewGroup.MarginLayoutParams {
+        return ViewGroup.MarginLayoutParams(width, height).apply {
+            setMargins(leftMargin, topMargin, rightMargin, bottomMargin)
+        }
+    }
+
+    fun any(width: Int, height: Int): ViewGroup.LayoutParams {
+        return ViewGroup.LayoutParams(width, height)
     }
 
     /*
@@ -225,4 +258,95 @@ object Layout {
     fun linear(width: Int, height: Int): LinearLayout.LayoutParams {
         return LinearLayout.LayoutParams(width, height)
     }
+
+    /*
+        RelativeLayout
+     */
+
+    fun relativeDp(
+        width: Int, height: Int,
+        rule: Rule,
+        leftMargin: Int, topMargin: Int, rightMargin: Int, bottomMargin: Int
+    ): RelativeLayout.LayoutParams {
+        return relative(
+            size(width), size(height),
+            rule,
+            size(leftMargin), size(topMargin), size(rightMargin), size(bottomMargin)
+        )
+    }
+
+    fun relativeDp(
+        width: Int, height: Int,
+        rules: Array<Rule>,
+        leftMargin: Int, topMargin: Int, rightMargin: Int, bottomMargin: Int
+    ): RelativeLayout.LayoutParams {
+        return relative(
+            size(width), size(height),
+            rules,
+            size(leftMargin), size(topMargin), size(rightMargin), size(bottomMargin)
+        )
+    }
+
+    fun relativeDp(width: Int, height: Int, leftMargin: Int, topMargin: Int, rightMargin: Int, bottomMargin: Int): RelativeLayout.LayoutParams {
+        return relative(
+            size(width), size(height),
+            size(leftMargin), size(topMargin), size(rightMargin), size(bottomMargin)
+        )
+    }
+
+    fun relativeDp(width: Int, height: Int, rule: Rule): RelativeLayout.LayoutParams {
+        return relative(size(width), size(height), arrayOf(rule))
+    }
+
+    fun relativeDp(width: Int, height: Int, rules: Array<Rule>): RelativeLayout.LayoutParams {
+        return relative(size(width), size(height), rules)
+    }
+
+    fun relativeDp(width: Int, height: Int): RelativeLayout.LayoutParams {
+        return relative(size(width), size(height))
+    }
+
+    fun relative(
+        width: Int, height: Int,
+        rule: Rule,
+        leftMargin: Int, topMargin: Int, rightMargin: Int, bottomMargin: Int
+    ): RelativeLayout.LayoutParams {
+        return relative(
+            width, height, arrayOf(rule), leftMargin, topMargin, rightMargin, bottomMargin
+        )
+    }
+
+    fun relative(
+        width: Int, height: Int,
+        rules: Array<Rule>,
+        leftMargin: Int, topMargin: Int, rightMargin: Int, bottomMargin: Int
+    ): RelativeLayout.LayoutParams {
+        return relative(width, height, rules).apply {
+            setMargins(leftMargin, topMargin, rightMargin, bottomMargin)
+        }
+    }
+
+    fun relative(width: Int, height: Int, leftMargin: Int, topMargin: Int, rightMargin: Int, bottomMargin: Int): RelativeLayout.LayoutParams {
+        return relative(width, height).apply {
+            setMargins(leftMargin, topMargin, rightMargin, bottomMargin)
+        }
+    }
+
+    fun relative(width: Int, height: Int, rule: Rule): RelativeLayout.LayoutParams {
+        return relative(width, height, arrayOf(rule))
+    }
+
+    fun relative(width: Int, height: Int, rules: Array<Rule>): RelativeLayout.LayoutParams {
+        return relative(width, height).apply {
+            rules.forEach { rule ->
+                addRule(rule.verb, rule.subject ?: RelativeLayout.TRUE)
+            }
+        }
+    }
+
+    fun relative(width: Int, height: Int): RelativeLayout.LayoutParams {
+        return RelativeLayout.LayoutParams(width, height)
+    }
+
+    class Rule(val verb: Int, val subject: Int? = null)
 }
